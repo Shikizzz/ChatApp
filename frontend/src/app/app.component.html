@@ -1,0 +1,51 @@
+<!-- If the user is not connected, show the username input page -->
+<div *ngIf="!isConnected" id="username-page">
+  <div class="username-page-container">
+    <!-- Title of the username page -->
+    <h1 class="title">Type your username and ID <br>(for POC only)</h1>
+
+    <form (ngSubmit)="connect()">
+      <div class="form-group">
+        <input [(ngModel)]="username" name="username" type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" />
+        <input [(ngModel)]="id" name="id" type="text" id="id" placeholder="id" autocomplete="off" class="form-control" />
+      </div>
+
+      <!-- Button to submit the username and connect to the chat -->
+      <div class="form-group">
+        <button type="submit" class="accent username-submit">Start Chatting</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div *ngIf="isConnected" id="chatroom">
+  <div class="chat-container">
+    <div class="chat-header">
+      <h2>Your Car Your Way</h2>
+      <h2>Chatroom</h2>
+    </div>
+
+    <div *ngIf="connectingMessage" class="connecting">{{ connectingMessage }}</div>
+
+    <ul id="messageArea">
+      <li *ngFor="let message of messages" [ngClass]="{'event-message': message.type !== 'CHAT', 'chat-message': message.type === 'CHAT'}">
+        <i *ngIf="message.type === 'CHAT'" [style.backgroundColor]="getAvatarColor(message.sender)">{{ message.sender.charAt(0) }}</i>
+        <span *ngIf="message.type === 'CHAT'">{{ message.sender }}</span>
+
+        <p>{{ message.type === 'CHAT' ? message.content : message.sender + ' ' + (message.type === 'JOIN' ? 'joined!' : 'left!') }}</p>
+      </li>
+    </ul>
+
+    <form (ngSubmit)="sendMessage()" id="typingArea">
+      <div class="form-group">
+        <div class="input-group clearfix">
+        
+          <input [(ngModel)]="message" name="message" type="text" id="message" placeholder="Write a message..." autocomplete="off" class="form-control" />
+          
+          <button type="submit" class="primary">Send</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
