@@ -2,8 +2,9 @@
 -- Database creation
 --
 
-CREATE DATABASE your_car_your_way
-USE your_car_your_way
+DROP DATABASE IF EXISTS `your_car_your_way`;
+CREATE DATABASE `your_car_your_way`;
+USE `your_car_your_way`;
 
 --
 -- Table structure for table `agency`

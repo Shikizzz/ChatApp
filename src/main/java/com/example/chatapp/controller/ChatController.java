@@ -22,19 +22,19 @@ public class ChatController {
         this.chatSessionService = chatSessionService;
     }
 
-    @MessageMapping("chat.sendMessage/{id}")  // Maps messages sent to "chat.sendMessage/room" WebSocket destination
+    @MessageMapping("chat.sendMessage/{id}")  // Maps messages sent to "chat.sendMessage/{id}" WebSocket destination
     @SendTo("/topic/{id}")  // Specifies that the return message will be sent to "/topic/{id}"
     public ChatMessageDTO sendMessage(@Payload ChatMessageDTO msg, @DestinationVariable String id) {
         // Log the sender and content of the message for debugging
         System.out.println("Message received from " + msg.getSender() + ": " + msg.getContent());
         this.wsChatService.persistMessage(msg, Integer.valueOf(id));
         
-        // Broadcast the message to all subscribers on the "/topic/public" topic
+        // Broadcast the message to all subscribers on the "/topic/{id}" topic
         return msg;
     }
 
-    @MessageMapping("chat.addUser/{id}")  // Maps messages sent to "chat.addUser" WebSocket destination
-    @SendTo("/topic/{id}")  // Specifies that the return message will be sent to "/topic/{username}"
+    @MessageMapping("chat.addUser/{id}")  // Maps messages sent to "chat.addUser/{id}" WebSocket destination
+    @SendTo("/topic/{id}")  // Specifies that the return message will be sent to "/topic/{id}"
     public ChatMessageDTO addUser(@Payload ChatMessageDTO msg, SimpMessageHeaderAccessor headerAccessor, @DestinationVariable String id) {
         // Store the username in the WebSocket session attributes
         headerAccessor.getSessionAttributes().put("username", msg.getSender());
